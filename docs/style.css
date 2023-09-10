@@ -1,0 +1,52 @@
+/* シンプルな四角形 */
+.box {
+    background: mintcream;
+    /*背景色の指定*/
+    padding: 10px;
+}
+
+.box p {
+    margin: 0;
+    padding: 0;
+}
+
+/* 付箋付き四角形 */
+.sticky_box {
+    background: #c4d9ff;
+    /*背景色の指定*/
+    border-left: #4e7bcc 5px solid;
+    /*左の境界線の指定*/
+    padding: 10px;
+}
+
+.sticky_box p {
+    margin: 0;
+    padding: 0;
+}
+
+/* 表 */
+table.t {
+    border: 1px solid Gray;
+    border-collapse: collapse;
+}
+
+table.t th {
+    border: 1px solid whitesmoke;
+    color: whitesmoke;
+    background-color: gray;
+    padding: 5px
+}
+
+table.t td {
+    border: 1px solid Gray;
+    padding: 5px;
+    text-align: center;
+}
+
+table.t tr:nth-child(odd) td {
+    background-color: White
+}
+
+table.t tr:nth-child(even) td {
+    background-color: #F6FCFF
+}

@@ -102,7 +102,7 @@ def checkfile(path: str | pathlib.Path):
         if no == 1:
             newpath = path.replace('.ksh', f'_{no}.ksh')
         else:
-            newpath = re.sub('[0-9]+\.ksh', f'{no}.ksh', path)
+            newpath = re.sub(r'[0-9]+\.ksh', f'{no}.ksh', path)
         newpath = checkfile(newpath)
         return newpath
     else:
