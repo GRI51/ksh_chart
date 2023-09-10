@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>CSVをHTML Tableに変換【みんなの知識 ちょっと便利帳】</title>
+<meta name="robots" content="NOINDEX,NOFOLLOW">
+<!-- 一行毎に着色するCSS。必要がなければ、tableの「class='t'」とともに削除してください -->
+<style>
+table.t {border:1px solid Gray; border-collapse:collapse}
+table.t td{border:1px solid Gray; padding:5px}
+table.t tr:nth-child(odd)  td{background-color:White}
+table.t tr:nth-child(even) td{background-color:#F6FCFF}
+</style>
+</head>
+<body>
+<table class='t'>
+<tr>
+<td>title</td>
+<td>artist</td>
+<td>effect</td>
+<td>LT</td>
+<td>CH</td>
+<td>EX</td>
+<td>IN</td>
+<td>source</td>
+</tr>
+<tr>
+<td>Astral spirits[PIN]</td>
+<td>K-forest</td>
+<td>GRI</td>
+<td>&nbsp</td>
+<td>&nbsp</td>
+<td>17</td>
+<td>&nbsp</td>
+<td>SFES2019</td>
+</tr>
+<tr>
+<td>Clck Up[respectBCH]</td>
+<td>Sho Fish</td>
+<td>GRI S-Style</td>
+<td>&nbsp</td>
+<td>&nbsp</td>
+<td>&nbsp</td>
+<td>18</td>
+<td>SF2016 No.31-60</td>
+</tr>
+<tr>
+<td>Dirigeant Decision[respectF]</td>
+<td>siqlo</td>
+<td>GRI</td>
+<td>&nbsp</td>
+<td>&nbsp</td>
+<td>&nbsp</td>
+<td>17</td>
+<td>SF2016 No.31-60</td>
+</tr>
+<tr>
+<td>Ethereal Ray[modern]</td>
+<td>yoho</td>
+<td>GRI</td>
+<td>&nbsp</td>
+<td>&nbsp</td>
+<td>&nbsp</td>
+<td>19</td>
+<td>SF2016 No.31-60</td>
+</tr>
+<tr>
+<td>Meishin-Midnight[respect7&F]</td>
+<td>Ask.A</td>
+<td>GRI</td>
+<td>&nbsp</td>
+<td>&nbsp</td>
+<td>&nbsp</td>
+<td>16</td>
+<td>SFES2022</td>
+</tr>
+<tr>
+<td>Neverending Nightmare[wow]</td>
+<td>Dragon_Klub</td>
+<td>GRI</td>
+<td>&nbsp</td>
+<td>&nbsp</td>
+<td>&nbsp</td>
+<td>18</td>
+<td>SFES2020</td>
+</tr>
+<tr>
+<td>Out of Range[respectSG]</td>
+<td>xima</td>
+<td>GRI</td>
+<td>&nbsp</td>
+<td>&nbsp</td>
+<td>17</td>
+<td>&nbsp</td>
+<td>SFES2020</td>
+</tr>
+<tr>
+<td>Out of Range[respect99]</td>
+<td>xima</td>
+<td>GRI</td>
+<td>&nbsp</td>
+<td>&nbsp</td>
+<td>&nbsp</td>
+<td>19</td>
+<td>SFES2020</td>
+</tr>
+<tr>
+<td>O.V.E.R.[SSS]</td>
+<td>xima</td>
+<td>GRI SSS-Style</td>
+<td>&nbsp</td>
+<td>&nbsp</td>
+<td>&nbsp</td>
+<td>17</td>
+<td>SFES2022</td>
+</tr>
+<tr>
+<td>Retribution[OH]</td>
+<td>brz1128+すいマグ</td>
+<td>GRI</td>
+<td>&nbsp</td>
+<td>&nbsp</td>
+<td>&nbsp</td>
+<td>18</td>
+<td>Pastel breeze vol.3</td>
+</tr>
+<tr>
+<td>Kaiser die Traumerei[respectN]</td>
+<td>K2 overture</td>
+<td>GRI</td>
+<td>&nbsp</td>
+<td>&nbsp</td>
+<td>&nbsp</td>
+<td>19</td>
+<td>Eupholic Selections vol.1</td>
+</tr>
+<tr>
+<td>Regression to Zero[respectCHT]</td>
+<td>seatrus</td>
+<td>GRI</td>
+<td>&nbsp</td>
+<td>&nbsp</td>
+<td>17</td>
+<td>19</td>
+<td>Eupholic Selections vol.2</td>
+</tr>
+<tr>
+<td>%UnDeciphered-CryptoGraph in the Edifice%[modern]</td>
+<td>seatrus</td>
+<td>GRI</td>
+<td>&nbsp</td>
+<td>&nbsp</td>
+<td>&nbsp</td>
+<td>18</td>
+<td>Eupholic Selections vol.1</td>
+</tr>
+<tr>
+<td>Variant Cross[modern]</td>
+<td>M-UE</td>
+<td>GRI</td>
+<td>&nbsp</td>
+<td>&nbsp</td>
+<td>&nbsp</td>
+<td>17</td>
+<td>Eupholic Selections vol.1</td>
+</tr>
+<tr>
+<td>帰還報告 ─ Debriefing ─[V]</td>
+<td>Axel⇒Show.T</td>
+<td>GRI</td>
+<td>&nbsp</td>
+<td>&nbsp</td>
+<td>&nbsp</td>
+<td>18</td>
+<td>Eupholic Selections vol.1</td>
+</tr>
+<tr>
+<td>ココロ ブレイカー[☆†竹取の翁†☆]</td>
+<td>タケミ</td>
+<td>☆†竹取の翁†☆</td>
+<td>&nbsp</td>
+<td>&nbsp</td>
+<td>&nbsp</td>
+<td>18</td>
+<td>Eupholic Selections vol.1</td>
+</tr>
+<tr>
+<td>要塞ジャングルジム[another]</td>
+<td>余興</td>
+<td>GRI</td>
+<td>&nbsp</td>
+<td>&nbsp</td>
+<td>&nbsp</td>
+<td>17</td>
+<td>Eupholic Selections vol.2</td>
+</tr>
+<tr>
+<td>TON578[G_NOTES]</td>
+<td>DJ Raisei</td>
+<td>GRI</td>
+<td>&nbsp</td>
+<td>15</td>
+<td>18</td>
+<td>20</td>
+<td>SFES2022</td>
+</tr>
+<tr>
+<td>イザヨイレイバース[PAN]</td>
+<td>brz1128</td>
+<td>GRI</td>
+<td>&nbsp</td>
+<td>&nbsp</td>
+<td>&nbsp</td>
+<td>17</td>
+<td>Pastel breeze vol.3</td>
+</tr>
+</table>
+<!-- このページを再利用する場合は、ここから下は削除してください -->
+<div style="border:#CCC 1px solid; border-radius: 4px;margin:20px 15px 0px 0px; padding:5px">
+<div style="margin-top:10px;font-size:15px">《参考情報》</div>
+<ul>
+<li style="font-size:13px">CSVファイルのエンコード： ASCII</li>
+<li>Warning! - OSがロケール ja_JP.ASCII に対応していません．</li></ul>
+</div>
+<!-- ここまで削除 -->
+</body>
+</html>

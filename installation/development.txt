@@ -1,0 +1,21 @@
+# Python package managers
+pip
+setuptools
+pipdeptree
+pip-licenses
+# pipenv
+
+# Static analysis tools
+flake8
+autopep8
+pylint
+bandit
+pytest
+pytest-cov
+pytest-mock
+
+# docment tools
+sphinx
+
+# debug
+matplotlib

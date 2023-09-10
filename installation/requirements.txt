@@ -1,0 +1,3 @@
+# Python package for production environment.
+chardet
+requests
