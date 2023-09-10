@@ -37,12 +37,12 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
-        pytest tests --cov=src --cov-report xml
+        pytest tests --cov --junitxml=pytest.xml --cov-report=term-missing:skip-covered | tee pytest-coverage.txt
     - name: Create Coverage Comment
       id: coverageComment
       uses: MishaKav/pytest-coverage-comment@main
       with:
-          pytest-coverage-path: coverage.xml
+          pytest-coverage-path: pytest-coverage.txt
           junitxml-path: ./pytest.xml
     - name: Create Coverage Badge
       uses: schneegans/dynamic-badges-action@v1.3.0
