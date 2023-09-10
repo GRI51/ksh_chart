@@ -12,7 +12,7 @@ GRI REMIX（以下「本パッケージ」）は、GRIが作成した差分譜�
 〇Pastel breeze vol.3
 
 #3 導入方法
-readme.txtと同じフォルダに同梱してある「GRI_REMIX」フォルダを、kshootmania.exeと同じディレクトリにある「song」フォルダに移動してください。
+「GRI_REMIX」フォルダを、kshootmania.exeと同じディレクトリにある「song」フォルダに移動してください。
 
 # 問い合わせ先
 Twitter:@shallotime
