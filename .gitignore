@@ -1,6 +1,9 @@
 .vscode/
 
-src/backup/*.ksh
+src/backup/*
+
+# 機密情報
+secret.txt
 
 # reaperファイル
 *.rpp

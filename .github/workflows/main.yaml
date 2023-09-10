@@ -11,7 +11,8 @@ on:
     branches:
       - main
 permissions:
-  contents: read
+  contents: write
+  pull-requests: write
 
 jobs:
   build_ubuntu:
@@ -37,4 +38,32 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
-        pytest tests
+        pytest tests/ --cov --junitxml=pytest.xml --cov-report=term-missing:skip-covered | tee pytest-coverage.txt
+    - name: Create Coverage Comment
+      id: coverageComment
+      uses: MishaKav/pytest-coverage-comment@main
+      with:
+          pytest-coverage-path: pytest-coverage.txt
+          junitxml-path: pytest.xml
+    - name: Check the output coverage
+      run: |
+        echo "Coverage Percantage - ${{ steps.coverageComment.outputs.coverage }}"
+        echo "Coverage Color - ${{ steps.coverageComment.outputs.color }}"
+        # echo "Summary Report - ${{ steps.coverageComment.outputs.summaryReport }}"
+        echo "Coverage Warnings - ${{ steps.coverageComment.outputs.warnings }}"
+        echo "Coverage Errors - ${{ steps.coverageComment.outputs.errors }}"
+        echo "Coverage Failures - ${{ steps.coverageComment.outputs.failures }}"
+        echo "Coverage Skipped - ${{ steps.coverageComment.outputs.skipped }}"
+        echo "Coverage Tests - ${{ steps.coverageComment.outputs.tests }}"
+        echo "Coverage Time - ${{ steps.coverageComment.outputs.time }}"
+        echo "Not Success Test Info - ${{ steps.coverageComment.outputs.notSuccessTestInfo }}"
+    - name: Create Coverage Badge
+      uses: schneegans/dynamic-badges-action@v1.3.0
+      with:
+          auth: ${{ secrets.BADGE }} # secretsに設定したトークン名
+          gistID: 4ebfb53821948ae141d18fac58571b88
+          filename: pytest-coverage-comment.json
+          label: Coverage
+          message: ${{ steps.coverageComment.outputs.coverage }}
+          color: ${{ steps.coverageComment.outputs.color }}
+          namedLogo: python

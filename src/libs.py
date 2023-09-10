@@ -2,6 +2,7 @@ from chardet.universaldetector import UniversalDetector
 
 
 def get_file_encoding(file_path) -> str | None:
+    # UniversalDetectorを使用して文字コードを判定
     with open(file_path, 'rb') as file:
         detector = UniversalDetector()
         for line in file:
@@ -9,7 +10,9 @@ def get_file_encoding(file_path) -> str | None:
             if detector.done:
                 break
         detector.close()
-    if detector.result['confidence'] < 0.8:
-        return None
-    else:
+    # 判定結果の確認
+    if detector.result['confidence'] >= 0.8:
         return detector.result['encoding']
+    else:
+        # 分析結果が怪しいので、分析失敗の意味でNoneを返す。
+        return None
