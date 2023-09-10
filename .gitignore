@@ -1,6 +1,7 @@
 .vscode/
 
 src/backup/*
+get_coverage.bat
 
 # 機密情報
 secret.txt
