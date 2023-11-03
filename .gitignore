@@ -4,7 +4,8 @@ src/backup/*
 get_coverage.bat
 
 # 静的解析ツールの結果
-mypy_report
+static_analysis_reports/*
+!static_analysis_reports/.gitkeep
 
 # 機密情報
 secret.txt

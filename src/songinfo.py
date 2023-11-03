@@ -2,7 +2,6 @@
 kshファイルの文字コードは「UTF-8 with BOM」です。
 """
 import os.path
-import pathlib
 from typing import TypedDict
 
 from libs.file_manager import get_file_encoding
@@ -11,15 +10,18 @@ REPLACE_LIST = [('light', 'LT'), ('challenge', 'CH'),
                 ('extended', 'EX'), ('infinite', 'IN')]
 
 
-class SongInfo(TypedDict):
+class SongInfoRequired(TypedDict):
     title: str
     artist: str
     effect: str
+    source: str
+
+
+class SongInfo(SongInfoRequired, total=False):
     LT: str
     CH: str
     EX: str
     IN: str
-    source: str
 
 
 def _search_ksh_element(target_ksh_list: list[str], element_word: str) -> str | None:
@@ -49,11 +51,9 @@ def _search_ksh_element(target_ksh_list: list[str], element_word: str) -> str | 
     """
     # 引数の型チェック
     if not isinstance(target_ksh_list, list):
-        raise TypeError(
-            f'引数target_ksh_listはlist型である必要があります。入力された変数の型：{type(target_ksh_list)}')
+        raise TypeError(f'引数target_ksh_listはlist型である必要があります。入力された変数の型：{type(target_ksh_list)}')
     if not isinstance(element_word, str):
-        raise TypeError(
-            f'引数element_wordはstr型である必要があります。入力された変数の型：{type(element_word)}')
+        raise TypeError(f'引数element_wordはstr型である必要があります。入力された変数の型：{type(element_word)}')
     # element_wordの要素が含まれるか1行ずつ検索
     for row_text in target_ksh_list:
         if len(element_word) > len(row_text):
@@ -67,7 +67,7 @@ def _search_ksh_element(target_ksh_list: list[str], element_word: str) -> str | 
     return None
 
 
-def get_package_song_info(ksh_path: str | pathlib.Path) -> SongInfo:
+def get_package_song_info(ksh_path: str) -> SongInfo:
     """引数に指定されたkshファイルの楽曲情報を取得します。
     楽曲情報は「曲名」「アーティスト名」「譜面製作者名」「難易度(4段階)」
     「難易度（1～20）」「出典」が含まれます。
@@ -75,7 +75,7 @@ def get_package_song_info(ksh_path: str | pathlib.Path) -> SongInfo:
 
     Parameters
     ----------
-    ksh_path : str | pathlib.Path
+    ksh_path : str
         楽曲情報を取得したいkshファイルのパスを指定します。
 
     Returns
@@ -100,9 +100,9 @@ def get_package_song_info(ksh_path: str | pathlib.Path) -> SongInfo:
         指定されたファイルが見つからなかった場合
     """
     # 引数の型チェック
-    if not isinstance(ksh_path, (str, pathlib.Path)):
+    if not isinstance(ksh_path, str):
         raise TypeError(
-            f'引数ksh_pathはstr型かpathlib.Path型である必要があります。入力された変数の型：{type(ksh_path)}')
+            f'引数ksh_pathはstr型である必要があります。入力された変数の型：{type(ksh_path)}')
     # ファイルの存在チェック
     if not os.path.isfile(ksh_path):
         abs_path = os.path.normpath(os.path.abspath(ksh_path))
@@ -111,29 +111,34 @@ def get_package_song_info(ksh_path: str | pathlib.Path) -> SongInfo:
     encoding = get_file_encoding(ksh_path)
     with open(ksh_path, encoding=encoding) as kshfile:
         ksh_texts = kshfile.readlines()
-    song_info = {}
-    song_info['title'] = _search_ksh_element(ksh_texts, 'title')
-    song_info['artist'] = _search_ksh_element(ksh_texts, 'artist')
-    song_info['effect'] = _search_ksh_element(ksh_texts, 'effect')
+    title = _search_ksh_element(ksh_texts, 'title')
+    if title is None:
+        raise ValueError('曲名を判別できませんでした。')
+    artist = _search_ksh_element(ksh_texts, 'artist')
+    if artist is None:
+        raise ValueError('作曲者を判別できませんでした。')
+    effect = _search_ksh_element(ksh_texts, 'effect')
+    if effect is None:
+        raise ValueError('譜面製作者を判別できませんでした。')
     difficulty = _search_ksh_element(ksh_texts, 'difficulty')
+    if difficulty is None:
+        raise ValueError('難易度（LT～IN）を判別できませんでした。')
     for old, new in REPLACE_LIST:
         difficulty = difficulty.replace(old, new)
-    song_info[difficulty] = _search_ksh_element(ksh_texts, 'level')
+    if difficulty not in ['LT', 'CH', 'EX', 'IN']:
+        raise ValueError('難易度（LT～IN）を判別できませんでした。')
+    level = _search_ksh_element(ksh_texts, 'level')
+    if level is None:
+        raise ValueError('難易度（1～20）を判別できませんでした。')
     ogg_path = _search_ksh_element(ksh_texts, 'm')
+    if ogg_path is None:
+        raise ValueError('音源ファイルを判別できませんでした。')
     try:
-        song_info['source'] = ogg_path.split('\\')[2]
+        ogg_path = ogg_path.split('\\')[2]
     except IndexError:
         # 区切り文字が\ではなく/であった場合
-        song_info['source'] = ogg_path.split('/')[2]
+        ogg_path = ogg_path.split('/')[2]
+
+    song_info: SongInfo = {'title': title, 'artist': artist, 'effect': effect, 'source': ogg_path}
+    song_info[difficulty] = level  # type: ignore
     return song_info
-
-
-if __name__ == '__main__':
-    test_ksh_path = os.path.join(os.path.dirname(
-        __file__), 'songs', 'GRI_REMIX', 'AstralSpirits[PIN]', 'AstralSpirits_ex[PIN].ksh')
-    info = get_package_song_info(test_ksh_path)
-    assert info['title'] == 'Astral spirits[PIN]', 'タイトルが一致していません'
-    assert info['artist'] == 'K-forest', 'アーティスト名が一致していません'
-    assert info['effect'] == 'GRI', '譜面製作者名が一致していません'
-    assert info['EX'] == '17', 'EXの難易度（1～20）が一致していません'
-    assert info['source'] == 'SFES2019', '出典が一致していません'

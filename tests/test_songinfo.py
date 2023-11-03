@@ -1,5 +1,4 @@
 import os
-import pathlib
 
 import pytest
 
@@ -26,8 +25,7 @@ class TestSongInfo:
             ksh_texts = kshfile.readlines()
         difficulty = songinfo._search_ksh_element(ksh_texts, 'difficulty')
         # 戻り値を検証
-        assert difficulty in ['light', 'challenge', 'extended', 'infinite',
-                              ], f'取得した難易度名が不正です。{difficulty}'
+        assert difficulty in ['light', 'challenge', 'extended', 'infinite'], f'取得した難易度名が不正です。{difficulty}'
 
     @pytest.mark.parametrize('ksh_path, song_info', [
         (os.path.join(os.path.dirname(
@@ -43,7 +41,7 @@ class TestSongInfo:
             __file__), 'testksh', 'イザヨイレイバース[PAN]', 'izayoiravers[PAN].ksh'),
             {'title': 'イザヨイレイバース[PAN]', 'artist': 'brz1128', 'effect': 'GRI', 'IN': '17', 'source': 'Pastel breeze vol.3'}),
     ])
-    def test_songinfo(self, ksh_path: str | pathlib.Path, song_info: dict):
+    def test_songinfo(self, ksh_path: str, song_info: dict):
         assert os.path.isfile(
             ksh_path), f'入力ファイルが見つかりません。{os.path.normpath(os.path.abspath(ksh_path))}'
         s_info = songinfo.get_package_song_info(ksh_path)
@@ -64,5 +62,4 @@ class TestSongInfo:
             songinfo.get_package_song_info(dummy_file_name)
         # エラーメッセージを検証
         dummy_file_name = os.path.normpath(os.path.abspath(dummy_file_name))
-        assert str(
-            err.value) == f'譜面ファイルが見つかりませんでした。{dummy_file_name}'
+        assert str(err.value) == f'譜面ファイルが見つかりませんでした。{dummy_file_name}'
