@@ -6,9 +6,11 @@ from typing import Final
 
 import requests
 
+import libs.python_logger
 import songinfo
 
 CSV_TO_HTML_WEBSITE_URL: Final[str] = 'https://www.benricho.org/moji_conv/csv-to-table/csv-to-table.php'
+logger = libs.python_logger.set_logger(__name__)
 
 
 def export_package_songlist(ksh_paths: list[str]) -> list[songinfo.SongInfo]:
@@ -64,9 +66,8 @@ def to_html(input_csv_path: str, output_html_path: str | None = None) -> bool:
     try:
         res = requests.post(url=CSV_TO_HTML_WEBSITE_URL,
                             files=files, timeout=30)
-    except TimeoutError as err:
-        print("webサイトへのPOST通信に失敗しました。")
-        print(err)
+    except TimeoutError:
+        logger.warning('webサイトへのPOST通信に失敗しました。', exc_info=True)
         return False
     # バイトから復元
     html_text = res.content.decode('utf_8')

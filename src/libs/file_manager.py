@@ -1,7 +1,7 @@
 from chardet.universaldetector import UniversalDetector
 
 
-def get_file_encoding(file_path) -> str | None:
+def get_file_encoding(file_path: str) -> str | None:
     # UniversalDetectorを使用して文字コードを判定
     with open(file_path, 'rb') as file:
         detector = UniversalDetector()

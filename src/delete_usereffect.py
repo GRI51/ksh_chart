@@ -4,8 +4,11 @@ import re
 import shutil
 from typing import Final
 
+import libs.python_logger
+
 no: int = 0
 KSH_FILE_FORMAT_VER: Final[float] = 1.71
+logger = libs.python_logger.set_logger(__name__)
 
 
 def main(ksh_path: str) -> None:
@@ -25,7 +28,7 @@ def main(ksh_path: str) -> None:
     ValueError
         引数で指定したファイルkshファイルでないとき
     """
-    print(f'バージョン{KSH_FILE_FORMAT_VER}のkshファイルに対応しています。')
+    logger.info(f'バージョン{KSH_FILE_FORMAT_VER}のkshファイルに対応しています。')
     # バリデーション
     # 引数の型チェック
     if not isinstance(ksh_path, str):
@@ -39,7 +42,7 @@ def main(ksh_path: str) -> None:
     if os.path.splitext(ksh_path)[1] != '.ksh':
         abs_path = os.path.normpath(os.path.abspath(ksh_path))
         raise ValueError(f'.kshファイルのみ変換が可能です。{abs_path}')
-    print(f'{os.path.basename(ksh_path)} から1度も使われていないユーザー定義エフェクトを削除します。')
+    logger.info(f'{os.path.basename(ksh_path)} から1度も使われていないユーザー定義エフェクトを削除します。')
 
     # ファイルから使われているエフェクト名を解析し、利用されてないエフェクトを削除したリストnew_kshを作成
     new_ksh = []
@@ -86,13 +89,13 @@ def main(ksh_path: str) -> None:
     if os.path.exists(backup_path):
         backup_path = backup_path.replace('.ksh', '_1.ksh')
     shutil.move(ksh_path, backup_path)  # 古いファイルを保存
-    print('バックアップファイルを保存しました。', backup_path)
+    logger.info('バックアップファイルを保存しました。', backup_path)
 
     # 新たなファイルを保存
     with open(ksh_path, 'w', newline="", encoding="utf_8_sig") as ksh_file:
         ksh_file.writelines(new_ksh)
 
-    print(f'{os.path.basename(ksh_path)} から1度も使われていないユーザー定義エフェクトを削除しました。')
+    logger.info(f'{os.path.basename(ksh_path)} から1度も使われていないユーザー定義エフェクトを削除しました。')
 
 
 def checkfile(path: str) -> str:
