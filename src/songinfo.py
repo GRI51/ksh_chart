@@ -1,13 +1,25 @@
 """kshファイルを指定して楽曲情報を取得します。
 kshファイルの文字コードは「UTF-8 with BOM」です。
 """
-import pathlib
 import os.path
+import pathlib
+from typing import TypedDict
 
-import libs
+from libs.file_manager import get_file_encoding
 
 REPLACE_LIST = [('light', 'LT'), ('challenge', 'CH'),
                 ('extended', 'EX'), ('infinite', 'IN')]
+
+
+class SongInfo(TypedDict):
+    title: str
+    artist: str
+    effect: str
+    LT: str
+    CH: str
+    EX: str
+    IN: str
+    source: str
 
 
 def _search_ksh_element(target_ksh_list: list[str], element_word: str) -> str | None:
@@ -55,7 +67,7 @@ def _search_ksh_element(target_ksh_list: list[str], element_word: str) -> str | 
     return None
 
 
-def get_package_song_info(ksh_path: str | pathlib.Path) -> dict:
+def get_package_song_info(ksh_path: str | pathlib.Path) -> SongInfo:
     """引数に指定されたkshファイルの楽曲情報を取得します。
     楽曲情報は「曲名」「アーティスト名」「譜面製作者名」「難易度(4段階)」
     「難易度（1～20）」「出典」が含まれます。
@@ -96,7 +108,7 @@ def get_package_song_info(ksh_path: str | pathlib.Path) -> dict:
         abs_path = os.path.normpath(os.path.abspath(ksh_path))
         raise FileNotFoundError(f'譜面ファイルが見つかりませんでした。{abs_path}')
     # kshファイルの情報を取得
-    encoding = libs.get_file_encoding(ksh_path)
+    encoding = get_file_encoding(ksh_path)
     with open(ksh_path, encoding=encoding) as kshfile:
         ksh_texts = kshfile.readlines()
     song_info = {}

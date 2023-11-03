@@ -7,12 +7,16 @@ pip-licenses
 
 # Static analysis tools
 flake8
+flake8-bandit
 autopep8
 pylint
-bandit
+ruff
+mypy
+lxml
 pytest
 pytest-cov
 pytest-mock
+pytest-timeout
 
 # docment tools
 sphinx

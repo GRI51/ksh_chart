@@ -22,6 +22,11 @@ pytest-cov = "*"
 pytest-mock = "*"
 sphinx = "*"
 matplotlib = "*"
+mypy = "*"
+pytest-timeout = "*"
+flake8-bandit = "*"
+ruff = "*"
+lxml = "*"
 
 [requires]
 python_version = "3.10"

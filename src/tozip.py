@@ -1,12 +1,16 @@
 """kshファイルが格納されたフォルダをzipに変換します。
 """
-import shutil
-import os
 import glob
+import os
+import shutil
 import warnings
 
+import libs.python_logger
 
-def make_zip(zip_name, target_folder):
+logger = libs.python_logger.set_logger(__name__)
+
+
+def make_zip(zip_name, target_folder: str) -> None:
     # 改行コードをCRLFに変換
     glob_path = os.path.join(target_folder, '**', '*.ksh')
     ksh_list = glob.glob(glob_path, recursive=True)
@@ -27,7 +31,7 @@ def make_zip(zip_name, target_folder):
         print(err)
 
 
-def export_zip(output_dir=None):
+def export_zip(output_dir: str = None) -> None:
     # 出力先フォルダ
     if output_dir is None:
         output_dir = os.path.join(os.path.dirname(

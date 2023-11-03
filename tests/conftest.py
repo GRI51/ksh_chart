@@ -19,12 +19,9 @@ if not os.path.isdir(LOG_DIR):
 # ファイルハンドラの設定
 file_handler = TimedRotatingFileHandler(LOG_FILE, when='D', interval=1)
 file_handler.setLevel(logging.DEBUG)
-file_handler.setFormatter(
-    logging.Formatter(
-        "%(asctime)s@Test log@[%(levelname)s]- %(name)s - %(funcName)s : %(message)s")
-)
-# ルートロガーの設定
-logging.basicConfig(level=logging.NOTSET, handlers=[file_handler])
+file_formatter = logging.Formatter(
+    "%(asctime)s [%(levelname)s] (%(filename)s | %(funcName)s | %(lineno)s) %(message)s")
+file_handler.setFormatter(file_formatter)
 
 
 # @pytest.fixture(scope='session', autouse=True)

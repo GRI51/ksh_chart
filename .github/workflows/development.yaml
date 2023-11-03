@@ -54,10 +54,10 @@ jobs:
             IFS=$PREV_IFS
             python src/delete_usereffect.py "${file}"
         done
-    - name: Create and deploy zip files
+    - name: Create zip files
       run: |
         python src/tozip.py
-    - name: push generated zip
+    - name: Push generated zip files
       # if: ${{ github.ref == 'refs/heads/main' }}
       run: |
         git config user.name auto-push

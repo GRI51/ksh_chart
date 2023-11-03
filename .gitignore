@@ -3,6 +3,9 @@
 src/backup/*
 get_coverage.bat
 
+# 静的解析ツールの結果
+mypy_report
+
 # 機密情報
 secret.txt
 
@@ -10,6 +13,10 @@ secret.txt
 *.rpp
 *.reapeaks
 *.bak
+
+# ログファイル
+*.log
+*.log.*
 
 # ショートカット
 *.lnk

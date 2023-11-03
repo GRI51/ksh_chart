@@ -1,19 +1,19 @@
-import os
 import argparse
-import shutil
+import os
 import re
-import pathlib
+import shutil
+from typing import Final
 
 no: int = 0
-KSH_FILE_FORMAT_VER = 1.71
+KSH_FILE_FORMAT_VER: Final[float] = 1.71
 
 
-def main(ksh_path: str | pathlib.Path):
+def main(ksh_path: str) -> None:
     """kshファイルから一度も使われていないユーザー定義エフェクトを削除します。
 
     Parameters
     ----------
-    ksh_path : str | pathlib.Path
+    ksh_path : str
         kshファイルパス
 
     Raises
@@ -28,9 +28,9 @@ def main(ksh_path: str | pathlib.Path):
     print(f'バージョン{KSH_FILE_FORMAT_VER}のkshファイルに対応しています。')
     # バリデーション
     # 引数の型チェック
-    if not isinstance(ksh_path, (str, pathlib.Path)):
+    if not isinstance(ksh_path, str):
         raise TypeError(
-            f'引数ksh_pathはstr型かpathlib.Path型である必要があります。入力された変数の型：{type(ksh_path)}')
+            f'引数ksh_pathはstr型である必要があります。入力された変数の型：{type(ksh_path)}')
     # ファイルの存在チェック
     if not os.path.isfile(ksh_path):
         abs_path = os.path.normpath(os.path.abspath(ksh_path))
@@ -92,10 +92,22 @@ def main(ksh_path: str | pathlib.Path):
     with open(ksh_path, 'w', newline="", encoding="utf_8_sig") as ksh_file:
         ksh_file.writelines(new_ksh)
 
-    print('{} から1度も使われていないユーザー定義エフェクトを削除しました。'.format(os.path.basename(ksh_path)))
+    print(f'{os.path.basename(ksh_path)} から1度も使われていないユーザー定義エフェクトを削除しました。')
 
 
-def checkfile(path: str | pathlib.Path):
+def checkfile(path: str) -> str:
+    """既にファイルが存在するか確認し、存在する場合は末尾に通し番号を付けて置き換える。
+
+    Parameters
+    ----------
+    path : str
+        存在するか確認するパス
+
+    Returns
+    -------
+    str
+        新しいパス
+    """
     global no
     no += 1
     if os.path.exists(path):
