@@ -42,9 +42,9 @@ def main(ksh_path: str) -> None:
     logger.info(f'{os.path.basename(ksh_path)} から1度も使われていないユーザー定義エフェクトを削除します。')
 
     # ファイルから使われているエフェクト名を解析し、利用されてないエフェクトを削除したリストnew_kshを作成
-    new_ksh = []
-    used_fx_effect_name = []
-    used_filter_effect_name = []
+    new_ksh: list[str] = []
+    used_fx_effect_name: list[str] = []
+    used_filter_effect_name: list[str] = []
     with open(ksh_path, 'r', newline="", encoding="utf_8_sig") as ksh_file:
         datalist = ksh_file.readlines()
         for row in datalist:
