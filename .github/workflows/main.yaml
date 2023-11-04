@@ -21,16 +21,26 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Set up Python 3.10
+    - name: Set up Python 3.11
       uses: actions/setup-python@v3
       with:
-        python-version: "3.10"
+        python-version: "3.11"
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip setuptools
         python -m pip install -r installation/development.txt
         python -m pip install -r installation/requirements.txt
+    - name: Lint with PyLint
+      run: |
+        # exit-zero treats all errors as warnings.
+        pylint src/ --exit-zero --rcfile pylintrc
     - name: Lint with flake8
+      run: |
+        # stop the build if there are Python syntax errors or undefined names
+        flake8 src/ --count --select=E9,F63,F7,F82 --show-source --statistics
+        # exit-zero treats all errors as warnings.
+        flake8 src/ --exit-zero --config flake8.ini --verbose
+    - name: Lint with mypy
       run: |
         # stop the build if there are Python syntax errors or undefined names
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
