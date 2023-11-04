@@ -3,6 +3,14 @@ setlocal
 
 pushd %~dp0
 
+set success_run=
+
+call .venv\Scripts\activate.bat
+if %errorlevel% neq 0 (
+    echo 仮想環境の実行に失敗しました。
+    goto end
+)
+
 @REM PyLint
 echo PyLint実行中...
 pylint src/ --rcfile pylintrc --output static_analysis_reports/pylint.txt
@@ -15,5 +23,20 @@ bandit -r src/ --configfile bandit.yaml -f html --output static_analysis_reports
 @REM mypy
 echo mypy実行中...
 mypy src/ --config-file mypy.ini --html-report static_analysis_reports --txt-report static_analysis_reports > static_analysis_reports/mypy.txt
+@REM pytest実行とカバレッジ取得
+python -m pytest tests/ --cov=src --cov-report xml
+if %errorlevel% neq 0 (
+    echo pytestの実行に失敗しました。
+    goto end
+)
 
+
+set success_run=1
+
+:end
 popd
+if defined success_run (
+    exit /b 0
+) else (
+    exit /b -1
+)

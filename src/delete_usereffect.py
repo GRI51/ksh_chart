@@ -1,12 +1,10 @@
 import argparse
 import os
-import re
 import shutil
 from typing import Final
 
 import libs.python_logger
 
-no: int = 0
 KSH_FILE_FORMAT_VER: Final[float] = 1.71
 logger = libs.python_logger.set_logger(__name__)
 
@@ -32,8 +30,7 @@ def main(ksh_path: str) -> None:
     # バリデーション
     # 引数の型チェック
     if not isinstance(ksh_path, str):
-        raise TypeError(
-            f'引数ksh_pathはstr型である必要があります。入力された変数の型：{type(ksh_path)}')
+        raise TypeError(f'引数ksh_pathはstr型である必要があります。入力された変数の型：{type(ksh_path)}')
     # ファイルの存在チェック
     if not os.path.isfile(ksh_path):
         abs_path = os.path.normpath(os.path.abspath(ksh_path))
@@ -67,14 +64,15 @@ def main(ksh_path: str) -> None:
                     continue    # 一度も使われていないエフェクトはスキップ
             # 譜面中で使われたFXエフェクトを取得
             elif 'fx-' in row:
-                assert row[:5] in {
-                    'fx-l=', 'fx-r='}, 'FXエフェクト構文解析エラー。バージョン変更等により譜面形式が変更されている可能性があります。'
+                if row[:5] not in ('fx-l=', 'fx-r='):
+                    raise ValueError('FXエフェクト構文解析エラー。バージョン変更等により譜面形式が変更されている可能性があります。')
                 fx_effectname = row[5:].split(';')[0].rstrip('\r\n')
                 used_fx_effect_name.append(fx_effectname)
             # 譜面中で使われたレーザーエフェクトを取得
             elif 'filtertype' in row:
                 filter_effectname = row[11:].rstrip('\r\n')
-                assert ';' not in filter_effectname, 'Filterエフェクト構文解析エラー。バージョン変更等により譜面形式が変更されている可能性があります。'
+                if ';' in filter_effectname:
+                    raise ValueError('Filterエフェクト構文解析エラー。バージョン変更等により譜面形式が変更されている可能性があります。')
                 used_filter_effect_name.append(filter_effectname)
             elif 'filter:' in row:
                 filter_effectname = row.split(':')[1]
@@ -89,7 +87,7 @@ def main(ksh_path: str) -> None:
     if os.path.exists(backup_path):
         backup_path = backup_path.replace('.ksh', '_1.ksh')
     shutil.move(ksh_path, backup_path)  # 古いファイルを保存
-    logger.info('バックアップファイルを保存しました。', backup_path)
+    logger.info(f'バックアップファイルを保存しました。 {backup_path}')
 
     # 新たなファイルを保存
     with open(ksh_path, 'w', newline="", encoding="utf_8_sig") as ksh_file:
@@ -98,7 +96,7 @@ def main(ksh_path: str) -> None:
     logger.info(f'{os.path.basename(ksh_path)} から1度も使われていないユーザー定義エフェクトを削除しました。')
 
 
-def checkfile(path: str) -> str:
+def checkfile(path: str, max_no: int = 9) -> str:
     """既にファイルが存在するか確認し、存在する場合は末尾に通し番号を付けて置き換える。
 
     Parameters
@@ -111,17 +109,17 @@ def checkfile(path: str) -> str:
     str
         新しいパス
     """
-    global no
-    no += 1
+    # 型チェック
+    if not isinstance(max_no, int) or max_no <= 0:
+        raise ValueError(f'max_noは自然数を指定して下さい。max_no={max_no}')
+    # 存在しない最も若い通し番号を判別し、パスにして返す
+    newpath = path
     if os.path.exists(path):
-        if no == 1:
+        for no in range(max_no):
             newpath = path.replace('.ksh', f'_{no}.ksh')
-        else:
-            newpath = re.sub(r'[0-9]+\.ksh', f'{no}.ksh', path)
-        newpath = checkfile(newpath)
-        return newpath
-    else:
-        return path
+            if not os.path.exists(newpath):
+                break
+    return newpath
 
 
 if __name__ == "__main__":
