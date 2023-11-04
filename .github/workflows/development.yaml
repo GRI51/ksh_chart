@@ -43,6 +43,15 @@ jobs:
         mypy src/ --config-file mypy.ini
     - name: Test with pytest
       run: |
+        pytest tests/ --cov --junitxml=pytest.xml --cov-report=term-missing:skip-covered | tee pytest-coverage.txt
+    - name: Create Coverage Comment
+      id: coverageComment
+      uses: MishaKav/pytest-coverage-comment@main
+      with:
+          pytest-coverage-path: pytest-coverage.txt
+          junitxml-path: pytest.xml
+    - name: Check the output coverage
+      run: |
         pytest tests/
     - name: Delete unuse user effect
       run: |
