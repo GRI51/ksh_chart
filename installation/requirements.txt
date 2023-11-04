@@ -1,3 +1,4 @@
 # Python package for production environment.
 chardet
 requests
+typing_extensions

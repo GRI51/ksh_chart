@@ -39,6 +39,15 @@ def export_package_songlist(ksh_paths: list[str]) -> list[songinfo.SongInfo]:
 
 
 def to_csv(song_info_list: list[songinfo.SongInfo], output_csv_path: str) -> None:
+    """楽曲情報（アーティスト名や難易度など）をcsvに変換してファイル出力する。
+
+    Parameters
+    ----------
+    song_info_list : list[songinfo.SongInfo]
+        楽曲情報 songinfo.get_package_song_info()で取得する
+    output_csv_path : str
+        出力先のcsvファイルパス
+    """
     with open(output_csv_path, 'w', encoding='utf-8', newline='') as csvfile:
         fieldnames = ['title', 'artist',
                       'effect', 'LT', 'CH', 'EX', 'IN', 'source']
@@ -62,13 +71,13 @@ def to_html(input_csv_path: str, output_html_path: str | None = None) -> bool:
     bool
         htmlファイルへの変換と保存に成功したらTrueを、失敗したらFalseを返す。
     """
-    files = {'file': open(input_csv_path, 'rb')}
-    try:
-        res = requests.post(url=CSV_TO_HTML_WEBSITE_URL,
-                            files=files, timeout=30)
-    except TimeoutError:
-        logger.warning('webサイトへのPOST通信に失敗しました。', exc_info=True)
-        return False
+    with open(input_csv_path, 'rb') as file_br:
+        files = {'file': file_br}
+        try:
+            res = requests.post(url=CSV_TO_HTML_WEBSITE_URL, files=files, timeout=30)
+        except TimeoutError:
+            logger.warning('webサイトへのPOST通信に失敗しました。', exc_info=True)
+            return False
     # バイトから復元
     html_text = res.content.decode('utf_8')
     # レベル20を赤字太字に変換

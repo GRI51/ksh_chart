@@ -2,6 +2,8 @@ import logging
 import logging.handlers
 import os
 
+LOG_FILE_NAME = 'logfile.log'
+
 
 def set_logger(module_name: str, log_dir: str | None = None) -> logging.Logger:
     """loggingモジュールのロガーを取得する。
@@ -17,7 +19,7 @@ def set_logger(module_name: str, log_dir: str | None = None) -> logging.Logger:
         （例）
         logger = python_logger.set_logger('module_name')
         logger.info('ログメッセージ。')
-        > 
+        > 2023-11-04 15:55:00,954 [INFO] (module_name | <func_name> | 26) ログメッセージ。
     log_dir : str | None
         ログファイルの出力先フォルダ。
         Noneを指定すると、src直下のlogsフォルダが出力先になる。
@@ -35,7 +37,6 @@ def set_logger(module_name: str, log_dir: str | None = None) -> logging.Logger:
     if log_dir is None:
         log_dir = os.path.join(os.path.dirname(__file__), '..', 'logs')
     os.makedirs(log_dir, exist_ok=True)
-    LOG_FILE_NAME = 'logfile.log'
     file_handler = logging.handlers.RotatingFileHandler(os.path.join(
         log_dir, LOG_FILE_NAME), maxBytes=int(10e6), backupCount=9)
     # フォーマット設定

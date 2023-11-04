@@ -27,6 +27,7 @@ pytest-timeout = "*"
 flake8-bandit = "*"
 ruff = "*"
 lxml = "*"
+types-requests = "*"
 
 [requires]
 python_version = "3.10"

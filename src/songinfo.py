@@ -4,24 +4,23 @@ kshファイルの文字コードは「UTF-8 with BOM」です。
 import os.path
 from typing import TypedDict
 
+from typing_extensions import NotRequired
+
 from libs.file_manager import get_file_encoding
 
 REPLACE_LIST = [('light', 'LT'), ('challenge', 'CH'),
                 ('extended', 'EX'), ('infinite', 'IN')]
 
 
-class SongInfoRequired(TypedDict):
+class SongInfo(TypedDict):
     title: str
     artist: str
     effect: str
     source: str
-
-
-class SongInfo(SongInfoRequired, total=False):
-    LT: str
-    CH: str
-    EX: str
-    IN: str
+    LT: NotRequired[str]
+    CH: NotRequired[str]
+    EX: NotRequired[str]
+    IN: NotRequired[str]
 
 
 def _search_ksh_element(target_ksh_list: list[str], element_word: str) -> str | None:
@@ -56,12 +55,9 @@ def _search_ksh_element(target_ksh_list: list[str], element_word: str) -> str | 
         raise TypeError(f'引数element_wordはstr型である必要があります。入力された変数の型：{type(element_word)}')
     # element_wordの要素が含まれるか1行ずつ検索
     for row_text in target_ksh_list:
-        if len(element_word) > len(row_text):
-            # 検索したい要素の文字数 > 被検索文字数　なら絶対に違うので次の行へ
-            continue
-        if element_word == row_text[:len(element_word)]:
-            # element_wordの要素が見つかったら、=より右側の要素をreturnする
-            ret_text = row_text[len(element_word) + 1:]
+        if row_text.startswith(element_word + '='):
+            # element_wordと完全一致する行が見つかったら、=より左側の文字列を削除して、右側の要素をreturnする
+            ret_text = row_text.replace(element_word + '=', '', 1)
             return ret_text.strip()
     # 見つからなかった場合
     return None
@@ -101,8 +97,7 @@ def get_package_song_info(ksh_path: str) -> SongInfo:
     """
     # 引数の型チェック
     if not isinstance(ksh_path, str):
-        raise TypeError(
-            f'引数ksh_pathはstr型である必要があります。入力された変数の型：{type(ksh_path)}')
+        raise TypeError(f'引数ksh_pathはstr型である必要があります。入力された変数の型：{type(ksh_path)}')
     # ファイルの存在チェック
     if not os.path.isfile(ksh_path):
         abs_path = os.path.normpath(os.path.abspath(ksh_path))
@@ -126,7 +121,7 @@ def get_package_song_info(ksh_path: str) -> SongInfo:
     for old, new in REPLACE_LIST:
         difficulty = difficulty.replace(old, new)
     if difficulty not in ['LT', 'CH', 'EX', 'IN']:
-        raise ValueError('難易度（LT～IN）を判別できませんでした。')
+        raise ValueError('難易度を判別できませんでした。LT,CH,EX,IN以外の文字列が指定されています。')
     level = _search_ksh_element(ksh_texts, 'level')
     if level is None:
         raise ValueError('難易度（1～20）を判別できませんでした。')

@@ -2,7 +2,7 @@
 setlocal
 
 set success_make_env=
-set python_ver=3.10
+set python_ver=3.11
 
 pushd "%~dp0"
 cd ..
