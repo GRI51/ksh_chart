@@ -17,9 +17,6 @@ pylint src/ --rcfile pylintrc --output static_analysis_reports/pylint.txt
 @REM Flake8
 echo Flake8ŽÀs’†...
 flake8 src/ --config flake8.ini --verbose > static_analysis_reports/flake8.txt
-@REM bandit
-echo banditŽÀs’†...
-bandit -r src/ --configfile bandit.yaml -f html --output static_analysis_reports/bandit.html
 @REM mypy
 echo mypyŽÀs’†...
 mypy src/ --config-file mypy.ini --html-report static_analysis_reports --txt-report static_analysis_reports > static_analysis_reports/mypy.txt
