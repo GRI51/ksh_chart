@@ -14,27 +14,22 @@ logger = libs.python_logger.set_logger(__name__)
 
 
 def export_package_songlist(ksh_paths: list[str]) -> list[songinfo.SongInfo]:
-    """songinfo.get_package_song_info()を用いてkshファイル群の情報を取得する
+    """`songinfo.get_package_song_info()`を用いてkshファイル群の情報を取得する
 
     Parameters
     ----------
     ksh_paths : list[str]
-        kshファイルのパスを要素として持つlist
+        kshファイルのパスを要素として持つ`list`
 
     Returns
     -------
     list[dict]
-        入力されたkshファイルに対応する情報が格納されたlist
+        入力されたkshファイルに対応する情報が格納された`list`
     """
     song_list: list[songinfo.SongInfo] = []
     for song_path in ksh_paths:
         song_info = songinfo.get_package_song_info(song_path)
-        for s_info in song_list:
-            if s_info['title'] == song_info['title']:
-                s_info.update(song_info)
-                break
-        else:
-            song_list.append(song_info)
+        song_list.append(song_info)
     return song_list
 
 
@@ -49,8 +44,7 @@ def to_csv(song_info_list: list[songinfo.SongInfo], output_csv_path: str) -> Non
         出力先のcsvファイルパス
     """
     with open(output_csv_path, 'w', encoding='utf-8', newline='') as csvfile:
-        fieldnames = ['title', 'artist',
-                      'effect', 'LT', 'CH', 'EX', 'IN', 'source']
+        fieldnames = ['title', 'artist', 'effect', 'LT', 'CH', 'EX', 'IN', 'source']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(song_info_list)
@@ -69,7 +63,7 @@ def to_html(input_csv_path: str, output_html_path: str | None = None) -> bool:
     Returns
     -------
     bool
-        htmlファイルへの変換と保存に成功したらTrueを、失敗したらFalseを返す。
+        htmlファイルへの変換と保存に成功したら`True`を、失敗したら`False`を返す。
     """
     with open(input_csv_path, 'rb') as file_br:
         files = {'file': file_br}

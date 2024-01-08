@@ -24,13 +24,13 @@ class SongInfo(TypedDict):
 
 
 def _search_ksh_element(target_ksh_list: list[str], element_word: str) -> str | None:
-    """kshファイルをf.readlines()でlist型に変換した変数から、element_wordの要素を抽出します。
-    見つからなかった場合、Noneを返します。
+    """kshファイルを`TextIOWrapper.readlines()`で`list`型に変換した変数から、`element_word`の要素を抽出します。
+    見つからなかった場合、`None`を返します。
 
     Parameters
     ----------
     target_ksh_list : list[str]
-        kshファイルをf.readlines()でlist型に変換した変数
+        kshファイルを`TextIOWrapper.readlines()`で`list`型に変換した変数
     element_word : str
         検索したい要素名 kshファイルの=(イコール)の左側にある英語文字列を指定します。
 
@@ -38,15 +38,15 @@ def _search_ksh_element(target_ksh_list: list[str], element_word: str) -> str | 
     -------
     str
         検索した要素の=の右側にある文字列を返します。
-        str.strip()メソッドを適用してからreturnするため、前後の空白文字等は削除されます。
-        見つからなかった場合、Noneを返します。
+        `str.strip()`メソッドを適用してから`return`するため、前後の空白文字等は削除されます。
+        見つからなかった場合、`None`を返します。
 
     Raises
     ------
     TypeError
-        第1引数target_ksh_listの型がlistでない場合
+        第1引数`target_ksh_list`の型が`list`でない場合
     TypeError
-        第2引数telement_wordの型がstrでない場合
+        第2引数`telement_word`の型が`str`でない場合
     """
     # 引数の型チェック
     if not isinstance(target_ksh_list, list):
@@ -78,8 +78,8 @@ def get_package_song_info(ksh_path: str) -> SongInfo:
     -------
     dict
         「曲名」「アーティスト名」「譜面製作者名」「難易度(4段階)」
-        「難易度（1～20）」「出典」を返します。辞書型であり、それぞれ
-        以下のようにkeyと対応しています。
+        「難易度（1～20）」「出典」を返します。辞書型(`dict`)であり、それぞれ
+        以下のように`key`と対応しています。
         曲名：title
         アーティスト名：artist
         譜面製作者名：effect

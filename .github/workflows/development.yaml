@@ -39,7 +39,6 @@ jobs:
         flake8 src/ --exit-zero --config flake8.ini --verbose
     - name: Lint with mypy
       run: |
-        # exit-zero treats all errors as warnings.
         mypy src/ --config-file mypy.ini
     - name: Test with pytest
       run: |

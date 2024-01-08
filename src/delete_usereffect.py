@@ -9,6 +9,69 @@ KSH_FILE_FORMAT_VER: Final[float] = 1.71
 logger = libs.python_logger.set_logger(__name__)
 
 
+def delete_unused_effect(datalist: list[str]) -> list[str]:
+    """kshファイルのデータから一度も使われていないユーザー定義エフェクトを削除します。
+    kshファイルは`TextIOWrapper.readlines()`等で行単位のリスト型変数に格納し、引数に渡します。
+
+    Parameters
+    ----------
+    datalist : list[str]
+        kshファイルを読み込んだリスト型変数
+
+    Returns
+    -------
+    list[str]
+        一度も使われていないユーザー定義エフェクトを削除したkshファイルのリスト型変数
+
+    Raises
+    ------
+    ValueError
+        ユーザー定義エフェクトに関する構文が想定外であったとき
+        （ksh本体のバージョン更新時などで仕様が変わったとき）。
+
+    Examples
+    ------
+    >>> d_list = ['fx-r_se=ga65', '#define_fx Re2/3 type=Retrigger;rate=67%', '#define_fx ga65 type=Gate;waveLength=1/8;rate=65%;mix=0%>88%']
+    >>> delete_unused_effect(d_list)
+    ['fx-r_se=ga65', '#define_fx ga65 type=Gate;waveLength=1/8;rate=65%;mix=0%>88%']
+    """
+    delete_ksh: list[str] = []
+    used_fx_effect_name: list[str] = []
+    used_filter_effect_name: list[str] = []
+    for row in datalist:
+        if 'fx-r_se=' in row or 'fx-l_se=' in row:
+            pass
+        # ユーザー定義エフェクト（FX）が使われたか判定
+        elif '#define_fx' in row:
+            used_fx = set(used_fx_effect_name)
+            fx_name = row.split(' ')[1]
+            if fx_name not in used_fx:
+                continue    # 一度も使われていないエフェクトはスキップ
+        # ユーザー定義エフェクト（レーザー）
+        elif '#define_filter' in row:
+            used_filter = set(used_filter_effect_name)
+            filter_name = row.split(' ')[1]
+            if filter_name not in used_filter:
+                continue    # 一度も使われていないエフェクトはスキップ
+        # 譜面中で使われたFXエフェクトを取得
+        elif 'fx-' in row:
+            if row[:5] not in ('fx-l=', 'fx-r='):
+                raise ValueError('FXエフェクト構文解析エラー。バージョン変更等により譜面形式が変更されている可能性があります。')
+            fx_effectname = row[5:].split(';')[0].rstrip('\r\n')
+            used_fx_effect_name.append(fx_effectname)
+        # 譜面中で使われたレーザーエフェクトを取得
+        elif 'filtertype' in row:
+            filter_effectname = row[11:].rstrip('\r\n')
+            if ';' in filter_effectname:
+                raise ValueError('Filterエフェクト構文解析エラー。バージョン変更等により譜面形式が変更されている可能性があります。')
+            used_filter_effect_name.append(filter_effectname)
+        elif 'filter:' in row:
+            filter_effectname = row.split(':')[1]
+            used_filter_effect_name.append(filter_effectname)
+        delete_ksh.append(row)
+    return delete_ksh
+
+
 def main(ksh_path: str) -> None:
     """kshファイルから一度も使われていないユーザー定義エフェクトを削除します。
 
@@ -42,42 +105,9 @@ def main(ksh_path: str) -> None:
     logger.info(f'{os.path.basename(ksh_path)} から1度も使われていないユーザー定義エフェクトを削除します。')
 
     # ファイルから使われているエフェクト名を解析し、利用されてないエフェクトを削除したリストnew_kshを作成
-    new_ksh: list[str] = []
-    used_fx_effect_name: list[str] = []
-    used_filter_effect_name: list[str] = []
     with open(ksh_path, 'r', newline="", encoding="utf_8_sig") as ksh_file:
         datalist = ksh_file.readlines()
-        for row in datalist:
-            if 'fx-r_se=' in row or 'fx-l_se=' in row:
-                pass
-            # ユーザー定義エフェクト（FX）が使われたか判定
-            elif '#define_fx' in row:
-                used_fx = set(used_fx_effect_name)
-                fx_name = row.split(' ')[1]
-                if fx_name not in used_fx:
-                    continue    # 一度も使われていないエフェクトはスキップ
-            # ユーザー定義エフェクト（レーザー）
-            elif '#define_filter' in row:
-                used_filter = set(used_filter_effect_name)
-                filter_name = row.split(' ')[1]
-                if filter_name not in used_filter:
-                    continue    # 一度も使われていないエフェクトはスキップ
-            # 譜面中で使われたFXエフェクトを取得
-            elif 'fx-' in row:
-                if row[:5] not in ('fx-l=', 'fx-r='):
-                    raise ValueError('FXエフェクト構文解析エラー。バージョン変更等により譜面形式が変更されている可能性があります。')
-                fx_effectname = row[5:].split(';')[0].rstrip('\r\n')
-                used_fx_effect_name.append(fx_effectname)
-            # 譜面中で使われたレーザーエフェクトを取得
-            elif 'filtertype' in row:
-                filter_effectname = row[11:].rstrip('\r\n')
-                if ';' in filter_effectname:
-                    raise ValueError('Filterエフェクト構文解析エラー。バージョン変更等により譜面形式が変更されている可能性があります。')
-                used_filter_effect_name.append(filter_effectname)
-            elif 'filter:' in row:
-                filter_effectname = row.split(':')[1]
-                used_filter_effect_name.append(filter_effectname)
-            new_ksh.append(row)
+        new_ksh = delete_unused_effect(datalist)
     # バックアップを作成
     backup_path = os.path.join(os.path.dirname(
         os.path.abspath(__file__)), 'backup', os.path.basename(ksh_path))

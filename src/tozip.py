@@ -10,6 +10,21 @@ logger = libs.python_logger.set_logger(__name__)
 
 
 def make_zip(zip_name: str, target_folder: str) -> bool:
+    """`target_folder`で指定したディレクトリ内に含まれるkshファイル等を
+    まとめてzipに変換する。
+
+    Parameters
+    ----------
+    zip_name : str
+        zip化したファイルのファイル名
+    target_folder : str
+        kshファイルがるディレクトリ
+
+    Returns
+    -------
+    bool
+        zipかに成功したかどうか。成功したら`True`を、失敗したら`False`を返す。
+    """
     # 改行コードをCRLFに変換
     glob_path = os.path.join(target_folder, '**', '*.ksh')
     ksh_list = glob.glob(glob_path, recursive=True)
@@ -31,6 +46,13 @@ def make_zip(zip_name: str, target_folder: str) -> bool:
 
 
 def export_zip(output_dir: str | None = None) -> None:
+    """所定のフォルダに含まれるkshファイル等をzipに変換する。
+
+    Parameters
+    ----------
+    output_dir : str | None, optional
+        zipファイルの出力先ディレクトリ名。`None`の場合、`src/docs/assets`に出力する。, by default None
+    """
     # 出力先フォルダ
     if output_dir is None:
         output_dir = os.path.join(os.path.dirname(__file__), '..', 'docs', 'assets')
