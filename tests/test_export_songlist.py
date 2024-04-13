@@ -26,7 +26,7 @@ class TestExportSonglist:
             __file__), 'testksh', 'イザヨイレイバース[PAN]', 'izayoiravers[PAN].ksh'),
             {'title': 'イザヨイレイバース[PAN]', 'artist': 'brz1128', 'effect': 'GRI', 'IN': '17', 'source': 'Pastel breeze vol.3'}),
     ])
-    def test_export_package_songlist(self, ksh_path: str, song_info: dict):
+    def test_export_package_songlist(self, ksh_path: str, song_info: dict) -> None:
         assert os.path.isfile(ksh_path), f'入力ファイルが見つかりません。{os.path.normpath(os.path.abspath(ksh_path))}'
         s_info = export_songlist.export_package_songlist([ksh_path])
         s_info = s_info[0]
@@ -40,7 +40,7 @@ class TestExportSonglist:
         assert s_info.get('IN') == song_info.get('IN'), 'INの難易度（1～20）が一致していません'
         assert s_info['source'] == song_info['source'], '出典が一致していません'
 
-    def test_to_csv(self):
+    def test_to_csv(self) -> None:
         # listを準備
         song_info_list: list[SongInfo] = [{'title': 'Astral spirits[PIN]', 'artist': 'K-forest', 'effect': 'GRI', 'EX': '17', 'source': 'SFES2019'},
                                           {'title': 'Clck Up[respectBCH]', 'artist': 'Sho Fish',
@@ -70,6 +70,7 @@ class TestExportSonglist:
                                           {'title': 'Variant Cross[modern]', 'artist': 'M-UE', 'effect': 'GRI', 'IN': '17', 'source': 'Eupholic Selections vol.1'}]
         # 一時フォルダにcsv出力
         with tempfile.TemporaryDirectory() as tmpdirname:
+            # ファイル名はこの関数自体の名前にする
             csv_path = os.path.join(tmpdirname, sys._getframe().f_code.co_name + '.csv')
             export_songlist.to_csv(song_info_list, csv_path)
             # 検証
@@ -83,7 +84,7 @@ class TestExportSonglist:
                 expect_row = ''.join(song_info.values())  # type: ignore
                 assert csv_text[i + 1].strip().replace(',', '') == expect_row, 'ヘッダーに記載されているテキストが異常です。'
 
-    def test_to_html(self):
+    def test_to_html(self) -> None:
         # csvファイルを準備
         song_info_list: list[SongInfo] = [{'title': 'Astral spirits[PIN]', 'artist': 'K-forest', 'effect': 'GRI', 'EX': '17', 'source': 'SFES2019'},
                                           {'title': 'Clck Up[respectBCH]', 'artist': 'Sho Fish',
@@ -126,7 +127,7 @@ class TestExportSonglist:
             assert html_text[4].strip() == '<title>CSVをHTML Tableに変換【みんなの知識 ちょっと便利帳】</title>', 'htmlファイルの中身が異常です。'
             assert html_text[15].strip() == "<table class='t'>", 'htmlファイルの中身が異常です。'
 
-    def test_to_html2(self):
+    def test_to_html2(self) -> None:
         """引数1つ　拡張子.csvを.htmlに変換
         """
         # csvファイルを準備
@@ -172,7 +173,7 @@ class TestExportSonglist:
             assert html_text[4].strip() == '<title>CSVをHTML Tableに変換【みんなの知識 ちょっと便利帳】</title>', 'htmlファイルの中身が異常です。'
             assert html_text[15].strip() == "<table class='t'>", 'htmlファイルの中身が異常です。'
 
-    def test_to_html_error_timeout(self, mocker: MockerFixture):
+    def test_to_html_error_timeout(self, mocker: MockerFixture) -> None:
         # csvファイルを準備
         song_info_list: list[SongInfo] = [{'title': 'Astral spirits[PIN]', 'artist': 'K-forest', 'effect': 'GRI', 'EX': '17', 'source': 'SFES2019'},
                                           {'title': 'Clck Up[respectBCH]', 'artist': 'Sho Fish',
