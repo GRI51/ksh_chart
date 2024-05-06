@@ -6,7 +6,7 @@ pushd %~dp0
 set success_run=
 set python_ver=3.11
 py -%python_ver% -m pipenv shell
-if %errorlevel% neq 0 (
+if %errorlevel% gtr 1 (
     echo ‰¼‘zŠÂ‹«‚ÌÀs‚É¸”s‚µ‚Ü‚µ‚½B
     goto end
 )
