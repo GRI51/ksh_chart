@@ -10,17 +10,17 @@ class TestCheckModule:
     """
     @pytest.mark.parametrize('ksh_path, expect_bool, expect_pos', [(
         os.path.join(os.path.dirname(
-            __file__), 'testksh', 'BEYOND_THE_LiMiT_560_GRI.ksh'), False, None),
+            __file__), 'testksh', 'BEYOND_THE_LiMiT_560_GRI.ksh'), False, []),
         (os.path.join(os.path.dirname(
-            __file__), 'testksh', 'Raving_Vibes_GRI.ksh'), False, None),
+            __file__), 'testksh', 'Raving_Vibes_GRI.ksh'), False, []),
         (os.path.join(os.path.dirname(
-            __file__), 'testksh', 'pianodokusoukyoku_akaikutsu_GRI.ksh'), False, None),
+            __file__), 'testksh', 'pianodokusoukyoku_akaikutsu_GRI.ksh'), False, []),
         (os.path.join(os.path.dirname(
             __file__), 'testksh', 'gypsy_GRI.ksh'), True, [53]),
         (os.path.join(os.path.dirname(
             __file__), 'testksh', 'BURST_V_GRI.ksh'), True, [76, 78]),
     ])
-    def test_check_bt_clap_overlap(self, ksh_path: str, expect_bool: bool, expect_pos: list[int] | None) -> None:
+    def test_check_bt_clap_overlap(self, ksh_path: str, expect_bool: bool, expect_pos: list[int]) -> None:
         """BTとSE付きFXの重なりのテスト
         FTとSE無しFXは対象外
 

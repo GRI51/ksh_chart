@@ -3,7 +3,7 @@
 """
 
 
-def check_bt_clap_overlap(ksh_data: list[str]) -> tuple[bool, list[int] | None]:
+def check_bt_clap_overlap(ksh_data: list[str]) -> tuple[bool, list[int]]:
     """ BTとSE付きFXの重なりをチェック
     fx-l_se=clap_punchy;55
     fx-r_se=clap_punchy;55
@@ -25,7 +25,7 @@ def check_bt_clap_overlap(ksh_data: list[str]) -> tuple[bool, list[int] | None]:
     check_result = False
     # 重なりがあった場所の小節数
     syosetsu_no = 0
-    position: list[int] | None = []
+    position: list[int] = []
     # SEの指示文があるときにTrueになる変数
     # SEの指示文（fx-r_se=clap_punchy;55）と
     # 譜面データ（0000|22|--）が異なる行にあるので、フラグで管理する。
@@ -69,10 +69,6 @@ def check_bt_clap_overlap(ksh_data: list[str]) -> tuple[bool, list[int] | None]:
         else:
             raise ValueError('ファイルの構文解析中にエラーが発生しました。')
     # 判定後の後処理
-    if not check_result:
-        # 重なりが存在しなければ小節位置に関する情報はNoneにする
-        position = None
-    else:
-        # リスト内の重複を削除
-        position = list(set(position))
+    # リスト内の重複を削除
+    position = list(set(position))
     return check_result, position
