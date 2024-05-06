@@ -61,6 +61,7 @@ jobs:
         do
             IFS=$PREV_IFS
             python src/delete_usereffect.py "${file}"
+            python src/check_murioshi.py "${file}"
         done
         PREV_IFS=$IFS
         IFS="
@@ -69,6 +70,7 @@ jobs:
         do
             IFS=$PREV_IFS
             python src/delete_usereffect.py "${file}"
+            python src/check_murioshi.py "${file}"
         done
     - name: Create zip files
       run: |
