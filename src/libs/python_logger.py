@@ -43,6 +43,7 @@ def set_logger(module_name: str, log_dir: str | None = None, multiprocess: bool 
     if log_dir is None:
         log_dir = LOG_DIR
     os.makedirs(log_dir, exist_ok=True)
+    file_handler: logging.handlers.SocketHandler | logging.handlers.RotatingFileHandler
     if multiprocess:
         file_handler = logging.handlers.SocketHandler('localhost', logging.handlers.DEFAULT_TCP_LOGGING_PORT)
         # 通信量を減らすため、ここでの伝播は行わない。
@@ -71,7 +72,7 @@ class LogRecordStreamHandler(socketserver.StreamRequestHandler):
     """ LogRecordバイナリを読み込んで処理する。 """
 
     # ロガーを保存しておく。
-    loggers = {}
+    loggers: dict[str, logging.Logger] = {}
 
     def handle(self) -> None:
         """ バイナリからLogRecordオブジェクトを作成し処理する。 """
@@ -91,7 +92,7 @@ class LogRecordStreamHandler(socketserver.StreamRequestHandler):
         """ バイナリ化されたデータを元のオブジェクトに変換する。 """
         return pickle.loads(data)
 
-    def handle_log_record(self: socketserver.StreamRequestHandler, record: logging.LogRecord) -> None:
+    def handle_log_record(self, record: logging.LogRecord) -> None:
         """ LogRecordオブジェクトを処理する。 """
         if self.server.logname is not None:
             name = self.server.logname
