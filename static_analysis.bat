@@ -27,7 +27,6 @@ if %errorlevel% neq 0 (
     goto end
 )
 
-
 set success_run=1
 
 :end
