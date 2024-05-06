@@ -4,8 +4,8 @@ setlocal
 pushd %~dp0
 
 set success_run=
-
-call .venv\Scripts\activate.bat
+set python_ver=3.11
+py -%python_ver% -m pipenv shell
 if %errorlevel% neq 0 (
     echo ‰¼‘zŠÂ‹«‚ÌÀs‚É¸”s‚µ‚Ü‚µ‚½B
     goto end
