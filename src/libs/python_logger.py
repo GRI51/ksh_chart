@@ -2,6 +2,7 @@ import logging
 import logging.handlers
 import os
 import pickle
+import select
 import socketserver
 import struct
 from typing import Any
@@ -82,15 +83,15 @@ class LogRecordStreamHandler(socketserver.StreamRequestHandler):
             chunk = self.connection.recv(slen)
             while len(chunk) < slen:
                 chunk = chunk + self.connection.recv(slen - len(chunk))
-            obj = self.unPickle(chunk)
+            obj = self.un_pickle(chunk)
             record = logging.makeLogRecord(obj)
-            self.handleLogRecord(record)
+            self.handle_log_record(record)
 
-    def unPickle(self, data: bytes) -> dict:
+    def un_pickle(self, data: bytes) -> dict:
         """ バイナリ化されたデータを元のオブジェクトに変換する。 """
         return pickle.loads(data)
 
-    def handleLogRecord(self: socketserver.StreamRequestHandler, record: logging.LogRecord) -> None:
+    def handle_log_record(self: socketserver.StreamRequestHandler, record: logging.LogRecord) -> None:
         """ LogRecordオブジェクトを処理する。 """
         if self.server.logname is not None:
             name = self.server.logname
@@ -116,7 +117,8 @@ class LogRecordSocketReceiver(socketserver.ThreadingTCPServer):
 
     allow_reuse_address = True
 
-    def __init__(self, host: str = 'localhost', port: int = logging.handlers.DEFAULT_TCP_LOGGING_PORT, handler: Any = LogRecordStreamHandler) -> None:
+    def __init__(self, host: str = 'localhost', port: int = logging.handlers.DEFAULT_TCP_LOGGING_PORT,
+                 handler: Any = LogRecordStreamHandler) -> None:
         socketserver.ThreadingTCPServer.__init__(self, (host, port), handler)
         self.abort = 0
         self.timeout = 1
@@ -124,16 +126,17 @@ class LogRecordSocketReceiver(socketserver.ThreadingTCPServer):
 
     def serve_until_stopped(self) -> None:
         """ ソケットが読み込み可能になるまで待機する。 """
-        import select
         abort = 0
         while not abort:
-            rd, wr, ex = select.select([self.socket.fileno()], [], [], self.timeout)
+            rd, _, _ = select.select([self.socket.fileno()], [], [], self.timeout)
             if rd:
                 self.handle_request()
             abort = self.abort
 
 
 def main() -> None:
+    """ログサーバーを起動して、停止信号が送出されるまで稼働する。
+    """
     tcpserver = LogRecordSocketReceiver()
     print('About to start TCP server...')
     tcpserver.serve_until_stopped()
