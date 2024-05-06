@@ -31,7 +31,8 @@ def delete_unused_effect(datalist: list[str]) -> list[str]:
 
     Examples
     ------
-    >>> d_list = ['fx-r_se=ga65', '#define_fx Re2/3 type=Retrigger;rate=67%', '#define_fx ga65 type=Gate;waveLength=1/8;rate=65%;mix=0%>88%']
+    >>> d_list = ['fx-r_se=ga65', '#define_fx Re2/3 type=Retrigger;rate=67%',
+    >>> '#define_fx ga65 type=Gate;waveLength=1/8;rate=65%;mix=0%>88%']
     >>> delete_unused_effect(d_list)
     ['fx-r_se=ga65', '#define_fx ga65 type=Gate;waveLength=1/8;rate=65%;mix=0%>88%']
     """

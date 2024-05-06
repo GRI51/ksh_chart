@@ -8,6 +8,10 @@ from urllib3.exceptions import InsecureRequestWarning
 from check_module import check_bt_clap_overlap
 
 urllib3.disable_warnings(InsecureRequestWarning)
+# 無理押しチェッカーWebサイトのURL
+REQUEST_URL = 'https://owatatsu.pasta-soft.com/k2/kshoot/muri_checker/muri_checker.php'
+# タイムアウト（単位[sec.]）
+REQUEST_TIMEOUT = 20
 
 
 def main(ksh_path: str) -> bool:
@@ -56,9 +60,8 @@ def main(ksh_path: str) -> bool:
             ksh_text[i] = ''
 
     # POST通信を実行
-    REQUEST_URL = 'https://owatatsu.pasta-soft.com/k2/kshoot/muri_checker/muri_checker.php'
     request_data = {'score': ''.join(ksh_text)}
-    response = requests.post(REQUEST_URL, data=request_data, verify=False)
+    response = requests.post(REQUEST_URL, data=request_data, verify=False, timeout=20)
 
     # POST通信結果を表示
     if response.status_code != 200:
