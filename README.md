@@ -8,9 +8,11 @@ GRIが製作したK-Shoot mania向け譜面を公開するWebページ
 ## Webページ
 [公開しているWebページへのリンク](https://gri51.github.io/ksh_chart/ "https://gri51.github.io/ksh_chart/")
 
-## How To
-配布したいkshファイルやパッケージを所定のフォルダに格納することで、
-自動的にhtmlページを作成して公開することができます。
+## How To Use
+1. 配布したいkshファイルやパッケージを所定のフォルダに格納する
+1. GitHubリポジトリにファイルをPUSHする
+1. CIが自動的にパッケージ配布用zipと配布用Webページ（htmlファイル）を作成する
+1. Webページを共有することで譜面を公開することができます
 
 ## ToDo
 - CIに無理押し判定を追加
