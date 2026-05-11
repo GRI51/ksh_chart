@@ -20,7 +20,7 @@ class TestDeleteUsereffect:
         os.path.join(os.path.dirname(
             __file__), 'testksh', 'イザヨイレイバース[PAN]', 'izayoiravers[PAN].ksh'),
     ])
-    def test_delete_usereffect(self, ksh_path):
+    def test_delete_usereffect(self, ksh_path) -> None:
         with tempfile.TemporaryDirectory() as temp_folder:
             # テスト用ファイルを一時ファイルにコピー
             shutil.copy2(ksh_path, temp_folder)

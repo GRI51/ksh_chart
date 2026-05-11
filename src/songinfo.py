@@ -17,6 +17,7 @@ class SongInfo(TypedDict):
     artist: str
     effect: str
     source: str
+    information: str
     LT: NotRequired[str]
     CH: NotRequired[str]
     EX: NotRequired[str]
@@ -128,12 +129,21 @@ def get_package_song_info(ksh_path: str) -> SongInfo:
     ogg_path = _search_ksh_element(ksh_texts, 'm')
     if ogg_path is None:
         raise ValueError('音源ファイルを判別できませんでした。')
+    information = _search_ksh_element(ksh_texts, 'information')
     try:
         ogg_path = ogg_path.split('\\')[2]
     except IndexError:
         # 区切り文字が\ではなく/であった場合
         ogg_path = ogg_path.split('/')[2]
 
-    song_info: SongInfo = {'title': title, 'artist': artist, 'effect': effect, 'source': ogg_path}
+    song_info: SongInfo = {'title': title, 'artist': artist, 'effect': effect, 'source': ogg_path, 'information': information}
     song_info[difficulty] = level  # type: ignore
+
+    # もし、informationに小数点表記の難易度が記載されていた場合、難易度を上書きする
+    try:
+        new_difficulty = float(song_info['information'])
+        song_info['IN'] = str(new_difficulty)
+    except (TypeError, ValueError):
+        pass
+
     return song_info

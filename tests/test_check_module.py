@@ -8,8 +8,8 @@ import check_module
 class TestCheckModule:
     """テストクラス
     """
-    @pytest.mark.parametrize('ksh_path, expect_bool, expect_pos', [(
-        os.path.join(os.path.dirname(
+    @pytest.mark.parametrize('ksh_path, expect_bool, expect_pos', [
+        (os.path.join(os.path.dirname(
             __file__), 'testksh', 'BEYOND_THE_LiMiT_560_GRI.ksh'), False, []),
         (os.path.join(os.path.dirname(
             __file__), 'testksh', 'Raving_Vibes_GRI.ksh'), False, []),
@@ -19,6 +19,8 @@ class TestCheckModule:
             __file__), 'testksh', 'gypsy_GRI.ksh'), True, [53]),
         (os.path.join(os.path.dirname(
             __file__), 'testksh', 'BURST_V_GRI.ksh'), True, [76, 78]),
+        (os.path.join(os.path.dirname(
+            __file__), 'testksh', 'boueinohakobune_Six[connect]', 'boueinohakobune[connect].ksh'), False, []),
     ])
     def test_check_bt_clap_overlap(self, ksh_path: str, expect_bool: bool, expect_pos: list[int]) -> None:
         """BTとSE付きFXの重なりのテスト
