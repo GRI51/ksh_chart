@@ -1,12 +1,12 @@
 ﻿title=秋草千日紅[NOTES&ONE-HAND]
 artist=yoho
 effect=GRI
-jacket=../../RGMES Expedition Package vol.1 (mid4)/RGMES1_Jacket_new.png
+jacket=../../RGMES Expedition Package vol.1/RGMES1_Jacket_new.png
 illustrator=なれう。
 difficulty=infinite
 level=19
 t=174
-m=../../RGMES Expedition Package vol.1 (mid4)/akikusasennichikou/akikusasennichikou.ogg
+m=../../RGMES Expedition Package vol.1/akikusasennichikou/akikusasennichikou.ogg
 o=0
 bg=sunset
 layer=arrow

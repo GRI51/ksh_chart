@@ -50,10 +50,24 @@ def to_csv(song_info_list: list[songinfo.SongInfo], output_csv_path: str) -> Non
 
 
 def csv_to_html_with_colspan(input_file: str, output_file: str) -> bool:
+    """csvファイルの内容をhtmlの表形式に変換して保存する。
+
+    Parameters
+    ----------
+    input_file : str
+        入力するcsvファイルのパス
+    output_file : str
+        出力するhtmlファイルのパス
+
+    Returns
+    -------
+    bool
+        変換と保存に成功したら`True`を、失敗したら`False`を返す。
+    """
     if os.path.splitext(input_file)[1].lower() != '.csv':
         logger.warning(f'入力ファイルの拡張子がcsvではありません。処理を中止します。{input_file}')
         return False
-    elif not os.path.isfile(input_file):
+    if not os.path.isfile(input_file):
         logger.warning(f'入力ファイルが見つかりませんでした。処理を中止します。{input_file}')
         return False
     if output_file is None:
@@ -115,7 +129,7 @@ def to_html(input_csv_path: str, output_html_path: str | None = None) -> bool:
     bool
         htmlファイルへの変換と保存に成功したら`True`を、失敗したら`False`を返す。
     """
-    with open(input_csv_path, 'r') as file_br:
+    with open(input_csv_path, 'r', encoding='utf-8') as file_br:
         url = 'https://mugen-tools.com/tools/table.php'
         data = ''.join(file_br.readlines())
         try:

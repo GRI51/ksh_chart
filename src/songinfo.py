@@ -17,7 +17,7 @@ class SongInfo(TypedDict):
     artist: str
     effect: str
     source: str
-    information: str
+    information: str | None
     LT: NotRequired[str]
     CH: NotRequired[str]
     EX: NotRequired[str]
@@ -141,8 +141,9 @@ def get_package_song_info(ksh_path: str) -> SongInfo:
 
     # もし、informationに小数点表記の難易度が記載されていた場合、難易度を上書きする
     try:
-        new_difficulty = float(song_info['information'])
-        song_info['IN'] = str(new_difficulty)
+        if song_info['information'] is not None:
+            new_difficulty = float(song_info['information'])
+            song_info['IN'] = str(new_difficulty)
     except (TypeError, ValueError):
         pass
 

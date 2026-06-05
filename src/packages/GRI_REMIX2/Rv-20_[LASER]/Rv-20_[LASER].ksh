@@ -4,7 +4,7 @@ effect=GRI SSS-Style
 jacket=..\..\Eupholic Selections vol.2\2\St-20_Ne9R0\jacket20.png
 illustrator=鹿鳴
 difficulty=infinite
-level=18
+level=17
 t=140
 m=..\..\Eupholic Selections vol.2\2\St-20_Ne9R0\NE9R0.ogg
 o=0
@@ -17,7 +17,7 @@ filtertype=peak
 chokkakuautovol=0
 chokkakuvol=35
 pfilterdelay=0
-information=18.0
+information=17.5
 icon=rader.png
 ver=171
 --
