@@ -14,6 +14,14 @@ GRIが製作したK-Shoot mania向け譜面を公開するWebページ
 1. CIが自動的にパッケージ配布用zipと配布用Webページ（htmlファイル）を作成する
 1. Webページを共有することで譜面を公開することができます
 
+## リリース手順
+1. `src/packages`または`src/songs`にパッケージを格納する。
+1. `export_songlist.bat`の`package_name`という変数にエクスポートしたいパッケージ名を指定する。
+1. `export_songlist.bat`を実行する。
+1. 生成されたhtmlファイルを引用し、`docs`フォルダ内に配布ページ（html）を作成する。
+1. ソースコードをパッケージごとpushする。
+1. 問題ないことを確認したらdevelopmentブランチをmainブランチにマージする。
+
 ## ToDo
 - CIに無理押し判定を追加
 - カバレッジの改善　`（if __name == '__main__')`の中身もテスト

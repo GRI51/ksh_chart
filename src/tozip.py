@@ -68,3 +68,7 @@ def export_zip(output_dir: str | None = None) -> None:
         zip_name = os.path.join(output_dir, folder_name)
         root_dir = os.path.join(os.path.dirname(__file__), 'packages', folder_name)
         make_zip(zip_name, root_dir)
+
+
+if __name__ == '__main__':
+    export_zip()

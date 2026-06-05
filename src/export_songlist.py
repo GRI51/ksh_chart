@@ -44,7 +44,7 @@ def to_csv(song_info_list: list[songinfo.SongInfo], output_csv_path: str) -> Non
     """
     with open(output_csv_path, 'w', encoding='utf-8', newline='') as csvfile:
         fieldnames = ['title', 'artist', 'effect', 'LT', 'CH', 'EX', 'IN', 'source']
-        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames, extrasaction='ignore')
         writer.writeheader()
         writer.writerows(song_info_list)
 
@@ -114,41 +114,22 @@ def csv_to_html_with_colspan(input_file: str, output_file: str) -> bool:
     return True
 
 
-def to_html(input_csv_path: str, output_html_path: str | None = None) -> bool:
-    """csvファイルを表形式のhtmlに変換する。
+if __name__ == '__main__':
+    import glob
+    import sys
 
-    Parameters
-    ----------
-    input_csv_path : str
-        htmlの表に変換したいcsvのファイルパス
-    output_html_path : str | None, optional
-        出力するhtmlファイル名（ファイルパス）, by default None
+    # ここでどのパッケージ情報を取得するか指定
+    glob_path = os.path.join(os.path.dirname(__file__), 'packages', sys.argv[1], '*', '*.ksh')
+    print(glob_path)
 
-    Returns
-    -------
-    bool
-        htmlファイルへの変換と保存に成功したら`True`を、失敗したら`False`を返す。
-    """
-    with open(input_csv_path, 'r', encoding='utf-8') as file_br:
-        url = 'https://mugen-tools.com/tools/table.php'
-        data = ''.join(file_br.readlines())
-        try:
-            res = requests.post(url=url, data={'input': data}, timeout=30)
-        except TimeoutError:
-            logger.warning('webサイトへのPOST通信に失敗しました。', exc_info=True)
-            return False
-    # レスポンスの値が200以外だった場合は中止
-    if res.status_code != 200:
-        logger.warning(f'webサイトへのPOST通信に失敗しました。ステータスコード：{res.status_code} レスポンスの内容：{res.text}')
-        return False
-    # 必要部分のみ抽出
-    soup = BeautifulSoup(res.text, 'html.parser')
-    html_text = str(soup.find('textarea', id='outText'))
-    # レベル20を赤字太字に変換
-    html_text = html_text.replace('<td>20</td>', '<td><b><font color="red">20</font></b></td>')
-    # ファイルとして保存
-    if output_html_path is None:
-        output_html_path = input_csv_path.replace(os.path.splitext(input_csv_path)[1], '.html')
-    with open(output_html_path, 'w', encoding='utf-8', newline='') as htmlfile:
-        htmlfile.writelines(res.content.decode('utf_8'))
-    return True
+    export_ksh_paths = glob.glob(glob_path)
+    s_info_list = export_package_songlist(export_ksh_paths)
+
+    # to csv
+    csv_path = os.path.join(os.path.dirname(__file__), 'songlist.csv')
+    to_csv(s_info_list, csv_path)
+
+    # to html
+    # csv->html変換サイトへPOST通信
+    html_path = os.path.join(os.path.dirname(__file__), 'songlist.html')
+    csv_to_html_with_colspan(csv_path, html_path)
