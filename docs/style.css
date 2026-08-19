@@ -50,3 +50,8 @@ table.t tr:nth-child(odd) td {
 table.t tr:nth-child(even) td {
     background-color: #F6FCFF
 }
+
+table.t td:nth-child(2) {
+    text-align: left;
+    /* 2列目だけ左揃え */
+}
